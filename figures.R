@@ -5,18 +5,18 @@ library(tidyverse)
 
 full_dataset <- read_csv('no_pan_dataset.csv')
 
-for_figures <- full_dataset %>% 
-  filter(iucn_category %in% as.character(1:5)) %>% 
-  mutate(iucn_category = factor(iucn_category, levels = 1:5)) %>% 
+for_figures <- full_dataset  %>% 
   distinct() %>% 
   mutate(iucn_text = case_when(
     iucn_category == 1 ~ 'Least Concern',
     iucn_category == 2 ~ 'Near Threatened',
     iucn_category == 3 ~ 'Vulnerable',
     iucn_category == 4 ~ 'Endangered',
-    iucn_category == 5 ~ 'Critically Endangered') %>% 
+    iucn_category == 5 ~ 'Critically Endangered',
+    iucn_category == 'dd' ~ 'Data Deficient',
+    iucn_category == 'ne' ~ 'Not Evaluated') %>% 
       factor(
-        levels = c('Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered')))
+        levels = c('Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered', 'Data Deficient', 'Not Evaluated')))
 
 
 # data plots --------------------------------------------------------------
@@ -87,7 +87,7 @@ ggplot(for_figures) +
     color = 'IUCN Category') +
   theme_bw() +
   theme(
-    plot.title = element_text(size = 9),
+    plot.title = element_text(size = 8),
     axis.ticks.x = element_blank(),
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
