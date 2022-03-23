@@ -95,11 +95,16 @@ ggplot(for_figures) +
 
 # depth zone
 ggplot(for_figures) +
-  geom_jitter(
+  geom_bar(
     mapping = aes(
-      x = depth_zone,
-      y = iucn_category),
-    height = 0.1,
-    width = 0.2)
-
+      x = iucn_text,
+      fill = depth_zone)) + 
+  labs(
+    title = 'Depth Zone by IUCN Category for Marine Fish Species',
+    x = 'IUCN Category',
+    y = 'Count',
+    color = 'Depth Zone') +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = -45, hjust = -0.05))
 
