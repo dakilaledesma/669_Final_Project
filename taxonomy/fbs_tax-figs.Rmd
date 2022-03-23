@@ -1,0 +1,49 @@
+---
+title: "fbs_initialfigs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# setup
+
+```{r}
+library(tidyverse)
+install.packages("taxize")
+library(taxize)
+```
+
+
+```{r}
+getwd()
+setwd("~/Documents/UNC/SPRING 2022/ENEC 669/data/data-joining")
+```
+
+```{r}
+fbs <- read_csv('fbs.csv') %>% 
+  mutate(
+    genus_species = str_c(genus, species, sep = ' '),
+    length_m = length_m/100) %>% 
+  select(date,genus_species,length_m,mass_g,depth_num,depth_zone)
+```
+
+# testing out tax name
+
+```{r}
+tax_name(sci ="Ablennes hians", c("genus","family","order"))
+testnames <- c("Ablennes hians","Aboma etheostoma", "Abudefduf bengalensis")
+tax_name(testnames, c("genus","family","order"))
+```
+
+
+```{r}
+fbs_fulltax <- tax_name(fbs$genus_species, c("genus","family","order", "class"), ask = FALSE)
+
+```
+
+
+classification(testnames, db = "ncbi")
+
+
