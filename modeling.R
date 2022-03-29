@@ -219,6 +219,7 @@ classAccuracy <- function(data, model){
 
 # model sucks: 99.8% accurate for 1 predictions, all wrong for others except 21.7% accuracy for 5
 classAccuracy(three_depth_data,three_depth_mod)
+overallAccuracy(three_depth_data, three_depth_mod)
 
 # indicates length_m should be nominal - still unsure of meaning
 nominal_test(three_depth_mod)

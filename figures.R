@@ -5,21 +5,26 @@ library(tidyverse)
 
 full_dataset <- read_csv('no_pan_dataset.csv')
 
-for_figures <- full_dataset  %>% 
+for_figures <- full_dataset %>% 
+  filter(iucn_category %in% as.character(1:5)) %>% 
+  mutate(iucn_category = factor(iucn_category, levels = 1:5)) %>% 
   distinct() %>% 
   mutate(iucn_text = case_when(
     iucn_category == 1 ~ 'Least Concern',
     iucn_category == 2 ~ 'Near Threatened',
     iucn_category == 3 ~ 'Vulnerable',
     iucn_category == 4 ~ 'Endangered',
-    iucn_category == 5 ~ 'Critically Endangered',
-    iucn_category == 'dd' ~ 'Data Deficient',
-    iucn_category == 'ne' ~ 'Not Evaluated') %>% 
+    iucn_category == 5 ~ 'Critically Endangered') %>% 
       factor(
-        levels = c('Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered', 'Data Deficient', 'Not Evaluated')))
+        levels = c('Least Concern', 'Near Threatened', 'Vulnerable', 'Endangered', 'Critically Endangered')))
 
 
 # data plots --------------------------------------------------------------
+
+# overall distribution
+for_figures %>% 
+  group_by(iucn_text) %>% 
+  summarize(n = n())
 
 # lat range
 ggplot(for_figures) +
@@ -87,7 +92,7 @@ ggplot(for_figures) +
     color = 'IUCN Category') +
   theme_bw() +
   theme(
-    plot.title = element_text(size = 8),
+    plot.title = element_text(size = 9),
     axis.ticks.x = element_blank(),
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
@@ -95,16 +100,11 @@ ggplot(for_figures) +
 
 # depth zone
 ggplot(for_figures) +
-  geom_bar(
+  geom_jitter(
     mapping = aes(
-      x = iucn_text,
-      fill = depth_zone)) + 
-  labs(
-    title = 'Depth Zone by IUCN Category for Marine Fish Species',
-    x = 'IUCN Category',
-    y = 'Count',
-    color = 'Depth Zone') +
-  theme_bw() +
-  theme(
-    axis.text.x = element_text(angle = -45, hjust = -0.05))
+      x = depth_zone,
+      y = iucn_category),
+    height = 0.1,
+    width = 0.2)
+
 
