@@ -218,6 +218,7 @@ classAccuracy <- function(data, model){
 }
 
 # model sucks: 99.8% accurate for 1 predictions, all wrong for others except 21.7% accuracy for 5
+# code for figure
 classAccuracy(three_depth_data,three_depth_mod)
 overallAccuracy(three_depth_data, three_depth_mod)
 
@@ -275,6 +276,7 @@ confint(boot_mod1)
 # lowest AIC is with all included, next best is a 43 increase by removing lat range
 drop1(boot_mod1, test = 'Chi')
 
+# code for fig
 classAccuracy(boot_data, boot_mod1)
 
 overallAccuracy(boot_data, boot_mod1)

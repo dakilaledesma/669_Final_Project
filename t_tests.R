@@ -42,4 +42,3 @@ t.test(
   full_dataset$depth_num[full_dataset$iucn_category == 1],
   full_dataset$depth_num[full_dataset$iucn_category %in% 2:5])
 
-
