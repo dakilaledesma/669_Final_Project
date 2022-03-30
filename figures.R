@@ -194,6 +194,6 @@ ggplot(for_figures) +
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85'))  +
-  scale_colour_viridis_d()
+  scale_fill_viridis_d()
 
 
