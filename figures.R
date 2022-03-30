@@ -196,4 +196,109 @@ ggplot(for_figures) +
     panel.background = element_rect(fill = 'gray85'))  +
   scale_fill_viridis_d()
 
+# mature age
+matureage_anova <- aov(
+  mature_age~iucn_category, 
+  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
 
+TukeyHSD(matureage_anova)
+
+ggplot(
+  data = for_figures %>% 
+    mutate(
+      sig = case_when(
+        iucn_category == 1 ~ 'a',
+        iucn_category == 2 ~ 'ab',
+        iucn_category == 3 ~ 'b',
+        iucn_category == 4 ~ 'c',
+        iucn_category == 5 ~ 'd')),
+  mapping = aes(
+    x = iucn_text,
+    y = mature_age,
+    color = iucn_text)) +
+  geom_boxplot() +
+  labs(
+    title = 'Mature Age by IUCN Category for Marine Fish Species',
+    y = 'Mature Age (years)',
+    color = 'IUCN Category',
+    x = NULL) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 9),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.background = element_rect(fill = 'gray85')) +
+  geom_text(
+    aes(y = 23, label = sig, color = NULL),
+    show.legend = F) +
+  scale_colour_viridis_d()
+
+# longitudinal range
+longrange_anova <- aov(
+  long_range~iucn_category, 
+  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
+
+TukeyHSD(longrange_anova)
+
+ggplot(
+  data = for_figures,
+  mapping = aes(
+    x = iucn_text,
+    y = long_range,
+    color = iucn_text)) +
+  geom_boxplot() +
+  labs(
+    title = 'Longitudinal Range by IUCN Category for Marine Fish Species',
+    y = 'Longitudinal Range (degrees)',
+    color = 'IUCN Category',
+    x = NULL) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 9),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.background = element_rect(fill = 'gray85')) +
+  geom_text(
+    aes(y = 265, label = 'a', color = NULL),
+    show.legend = F) +
+  scale_colour_viridis_d()
+
+# mass
+mass_anova <- aov(
+  mass_g~iucn_category, 
+  data = full_dataset[full_dataset$iucn_category %in% 1:5 & full_dataset$mass_g <10000000],)
+
+TukeyHSD(mass_anova)
+
+ggplot(
+  data = for_figures %>% 
+    mutate(
+      sig = case_when(
+        iucn_category == c(1:3,5) ~ 'a',
+        iucn_category == 4 ~ 'b')),
+  mapping = aes(
+    x = iucn_text,
+    y = mass_g,
+    color = iucn_text)) +
+  geom_boxplot() +
+  labs(
+    title = 'Maximum Body Mass by IUCN Category for Marine Fish Species',
+    y = 'Maximum Body Mass (g)',
+    color = 'IUCN Category',
+    x = NULL) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 9),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.background = element_rect(fill = 'gray85')) +
+  geom_text(
+    aes(y = 12, label = sig, color = NULL),
+    show.legend = F) +
+  scale_colour_viridis_d()
