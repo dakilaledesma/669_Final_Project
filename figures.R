@@ -191,6 +191,7 @@ ggplot(
   scale_colour_viridis_d()
 
 # depth zone
+
 ggplot(for_figures) +
   geom_bar(aes(
     x = iucn_text,
@@ -284,7 +285,7 @@ ggplot(
         iucn_category == 5 ~ 'c')),
   mapping = aes(
     x = iucn_text,
-    y = mass_g,
+    y = log(mass_g),
     color = iucn_text)) +
   geom_boxplot() +
   labs(
@@ -301,6 +302,73 @@ ggplot(
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
   geom_text(
-    aes(y = 3500000, label = sig, color = NULL),
+    aes(y = 15.5, label = sig, color = NULL),
+    show.legend = F) +
+  scale_colour_viridis_d()
+
+# diet
+
+ggplot(for_figures %>% 
+         filter(!is.na(diet))) +
+  geom_bar(aes(
+    x = iucn_text,
+    fill = diet)) +
+  labs(
+    title = 'Diet Type by IUCN Category for Marine Fish Species',
+    y = 'Count',
+    fill = 'Diet Type',
+    x = 'IUCN Category') +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 9),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_text(
+      vjust = 0.9,
+      hjust = 1,
+      angle = 45),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.background = element_rect(fill = 'gray85'))  +
+  scale_fill_viridis_d()
+
+# depth as a number
+
+ggplot(full_dataset[full_dataset$iucn_category %in% 1:5,]) +
+  geom_histogram(aes(x = log(depth_num))) +
+  facet_wrap(facets = vars(iucn_category))
+
+depthnum_anova <- aov(
+  log(depth_num)~iucn_category, 
+  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
+
+TukeyHSD(depthnum_anova)
+
+ggplot(
+  data = for_figures %>% 
+    mutate(
+      sig = case_when(
+        iucn_category %in% 1:2 ~ 'a',
+        iucn_category %in% 4:5 ~ 'ab',
+        iucn_category == 3 ~ 'b')),
+  mapping = aes(
+    x = iucn_text,
+    y = log(depth_num),
+    color = iucn_text)) +
+  geom_boxplot() +
+  labs(
+    title = 'Depth by IUCN Category for Marine Fish Species',
+    y = 'Log-Transformed Depth in Meters',
+    color = 'IUCN Category',
+    x = NULL) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 9),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.background = element_rect(fill = 'gray85')) +
+  geom_text(
+    aes(y = 9.1, label = sig, color = NULL),
     show.legend = F) +
   scale_colour_viridis_d()
