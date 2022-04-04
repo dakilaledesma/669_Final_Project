@@ -29,11 +29,9 @@ for_figures %>%
 
 # lat range
 
-latrange_anova <- aov(
-  lat_range~iucn_category, 
-  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
-
-TukeyHSD(latrange_anova)
+ggplot(full_dataset[full_dataset$iucn_category %in% 1:5,]) +
+  geom_histogram(aes(x = lat_range)) +
+  facet_wrap(facets = vars(iucn_category))
 
 ggplot(
   data = for_figures,
@@ -55,12 +53,14 @@ ggplot(
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
-  geom_text(
-    aes(y = 138, label = 'a', color = NULL),
-    show.legend = F) +
   scale_colour_viridis_d()
 
 # trophic level
+
+ggplot(full_dataset[full_dataset$iucn_category %in% 1:5,]) +
+  geom_histogram(aes(x = trophic_level)) +
+  facet_wrap(facets = vars(iucn_category))
+
 trophiclevel_anova <- aov(
   trophic_level~iucn_category, 
   data = full_dataset[full_dataset$iucn_category %in% 1:5,])
@@ -97,9 +97,21 @@ ggplot(
   scale_colour_viridis_d()
 
 # longevity
+
+ggplot(
+  full_dataset %>% 
+    filter(
+      iucn_category %in% 1:5,
+      longevity > 0)) +
+  geom_histogram(aes(x = log(longevity))) +
+  facet_wrap(facets = vars(iucn_category))
+
 longevity_anova <- aov(
-  longevity~iucn_category, 
-  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
+  log(longevity)~iucn_category, 
+  data = full_dataset %>% 
+    filter(
+      iucn_category %in% 1:5,
+      longevity > 0))
 
 TukeyHSD(longevity_anova)
 
@@ -108,18 +120,18 @@ ggplot(
     mutate(
       sig = case_when(
         iucn_category == 1 ~ 'a',
-        iucn_category == 2 ~ 'ab',
-        iucn_category == 3 ~ 'b',
-        iucn_category == 4 ~ 'c',
-        iucn_category == 5 ~ 'd')),
+        iucn_category %in% 2:3 ~ 'b',
+        iucn_category == 4 ~ 'bc',
+        iucn_category == 5 ~ 'c')) %>% 
+    filter(longevity > 0),
   mapping = aes(
     x = iucn_text,
-    y = longevity,
+    y = log(longevity),
     color = iucn_text)) +
   geom_boxplot() +
   labs(
     title = 'Mean Longevity by IUCN Category for Marine Fish Species',
-    y = 'Mean Longevity (years)',
+    y = 'Mean Log-Transformed Longevity in Years',
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -131,13 +143,18 @@ ggplot(
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
   geom_text(
-    aes(y = 105, label = sig, color = NULL),
+    aes(y = 5.2, label = sig, color = NULL),
     show.legend = F) +
   scale_colour_viridis_d()
 
 # length
+
+ggplot(full_dataset[full_dataset$iucn_category %in% 1:5,]) +
+  geom_histogram(aes(x = log(length_m))) +
+  facet_wrap(facets = vars(iucn_category))
+
 length_anova <- aov(
-  length_m~iucn_category, 
+  log(length_m)~iucn_category, 
   data = full_dataset[full_dataset$iucn_category %in% 1:5,])
 
 TukeyHSD(length_anova)
@@ -147,17 +164,17 @@ ggplot(
     mutate(
       sig = case_when(
         iucn_category == 1 ~ 'a',
-        iucn_category %in% 2:3 ~ 'b',
-        iucn_category == 4 ~ 'c',
+        iucn_category == c(2,4) ~ 'b',
+        iucn_category == 3 ~ 'c',
         iucn_category == 5 ~ 'd')),
   mapping = aes(
     x = iucn_text,
-    y = length_m,
+    y = log(length_m),
     color = iucn_text)) +
   geom_boxplot() +
   labs(
     title = 'Maximum Body Length by IUCN Category for Marine Fish Species',
-    y = 'Maximum Body Length (m)',
+    y = 'Log-Transformed Maximum Body Length in Meters',
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -197,21 +214,9 @@ ggplot(for_figures) +
   scale_fill_viridis_d()
 
 # mature age
-matureage_anova <- aov(
-  mature_age~iucn_category, 
-  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
-
-TukeyHSD(matureage_anova)
 
 ggplot(
-  data = for_figures %>% 
-    mutate(
-      sig = case_when(
-        iucn_category == 1 ~ 'a',
-        iucn_category == 2 ~ 'ab',
-        iucn_category == 3 ~ 'b',
-        iucn_category == 4 ~ 'c',
-        iucn_category == 5 ~ 'd')),
+  data = for_figures,
   mapping = aes(
     x = iucn_text,
     y = mature_age,
@@ -230,17 +235,9 @@ ggplot(
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
-  geom_text(
-    aes(y = 23, label = sig, color = NULL),
-    show.legend = F) +
   scale_colour_viridis_d()
 
 # longitudinal range
-longrange_anova <- aov(
-  long_range~iucn_category, 
-  data = full_dataset[full_dataset$iucn_category %in% 1:5,])
-
-TukeyHSD(longrange_anova)
 
 ggplot(
   data = for_figures,
@@ -262,24 +259,29 @@ ggplot(
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
-  geom_text(
-    aes(y = 265, label = 'a', color = NULL),
-    show.legend = F) +
   scale_colour_viridis_d()
 
 # mass
+
+ggplot(full_dataset[full_dataset$iucn_category %in% 1:5,]) +
+  geom_histogram(aes(x = log(mass_g))) +
+  facet_wrap(facets = vars(iucn_category))
+
 mass_anova <- aov(
-  mass_g~iucn_category, 
-  data = full_dataset[full_dataset$iucn_category %in% 1:5 & full_dataset$mass_g <10000000],)
+  log(mass_g)~iucn_category, 
+  data = full_dataset[full_dataset$iucn_category %in% 1:5 & full_dataset$mass_g < 10000000,])
 
 TukeyHSD(mass_anova)
 
 ggplot(
   data = for_figures %>% 
+    filter(mass_g < 10000000) %>% 
     mutate(
       sig = case_when(
-        iucn_category == c(1:3,5) ~ 'a',
-        iucn_category == 4 ~ 'b')),
+        iucn_category == 1 ~ 'a',
+        iucn_category == 2 ~ 'b',
+        iucn_category %in% 3:4 ~ 'bc',
+        iucn_category == 5 ~ 'c')),
   mapping = aes(
     x = iucn_text,
     y = mass_g,
@@ -299,6 +301,6 @@ ggplot(
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
   geom_text(
-    aes(y = 12, label = sig, color = NULL),
+    aes(y = 3500000, label = sig, color = NULL),
     show.legend = F) +
   scale_colour_viridis_d()
