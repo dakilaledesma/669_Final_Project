@@ -290,7 +290,7 @@ ggplot(
   geom_boxplot() +
   labs(
     title = 'Maximum Body Mass by IUCN Category for Marine Fish Species',
-    y = 'Maximum Body Mass (g)',
+    y = 'Log-Transformed Maximum Body Mass (g)',
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
