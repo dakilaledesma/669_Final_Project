@@ -131,7 +131,7 @@ ggplot(
   geom_boxplot() +
   labs(
     title = 'Mean Longevity by IUCN Category for Marine Fish Species',
-    y = 'Mean Log-Transformed Longevity in Years',
+    y = 'Log-Transformed Mean Longevity in Years',
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
