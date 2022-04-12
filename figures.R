@@ -228,12 +228,24 @@ ggplot(
 
 # depth zone
 
-ggplot(for_figures) +
-  geom_bar(aes(
+for_figures %>% 
+  filter(!is.na(depth_zone)) %>% 
+  group_by(iucn_text,depth_zone) %>% 
+  summarize(in_group = n()) %>% 
+  left_join(
+    for_figures %>% 
+      filter(!is.na(depth_zone)) %>% 
+      group_by(iucn_text) %>% 
+      summarize(total = n()),
+    by = 'iucn_text') %>% 
+  mutate(percent = in_group / total * 100) %>% 
+ggplot() +
+  geom_col(aes(
     x = iucn_text,
+    y = percent,
     fill = depth_zone)) +
   labs(
-    y = 'Count',
+    y = 'Percent',
     fill = 'Depth Zone',
     x = 'IUCN Category') +
   theme_bw() +
@@ -395,13 +407,24 @@ ggplot(
 
 # diet
 
-ggplot(for_figures %>% 
-         filter(!is.na(diet))) +
-  geom_bar(aes(
+for_figures %>% 
+  filter(!is.na(diet)) %>% 
+  group_by(iucn_text,diet) %>% 
+  summarize(in_group = n()) %>% 
+  left_join(
+    for_figures %>% 
+      filter(!is.na(diet)) %>% 
+      group_by(iucn_text) %>% 
+      summarize(total = n()),
+    by = 'iucn_text') %>% 
+  mutate(percent = in_group / total * 100) %>% 
+ggplot() +
+  geom_col(aes(
     x = iucn_text,
+    y = percent,
     fill = diet)) +
   labs(
-    y = 'Count',
+    y = 'Percent',
     fill = 'Diet Type',
     x = 'IUCN Category') +
   theme_bw() +
