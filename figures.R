@@ -353,6 +353,9 @@ ggplot(
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.background = element_rect(fill = 'gray85')) +
+  geom_text(
+    aes(y = 380, label = sig, color = NULL),
+    show.legend = F) +
   scale_colour_viridis_d()
 
 # mass
@@ -451,6 +454,10 @@ ggplot(full_dataset) +
 kruskal.test(depth_num ~ iucn_category, data = for_figures)
 
 pairwise.wilcox.test(for_figures$depth_num, for_figures$iucn_category, p.adjust.method = 'BH')
+
+for_figures %>% 
+  group_by(iucn_text) %>% 
+  summarize(mean_depth = mean(depth_num, na.rm = T))
 
 ggplot(
   data = for_figures %>% 
