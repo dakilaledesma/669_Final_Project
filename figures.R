@@ -2,7 +2,7 @@
 # setup -------------------------------------------------------------------
 
 library(tidyverse)
-library(ggbreak)
+library(ggpubr)
 
 full_dataset <- read_csv('no_pan_dataset.csv')
 
@@ -40,7 +40,7 @@ kruskal.test(lat_range ~ iucn_category, data = for_figures)
 
 pairwise.wilcox.test(for_figures$lat_range, for_figures$iucn_category, p.adjust.method = 'BH')
 
-ggplot(
+lat_range_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -57,7 +57,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Latitudinal Range (degrees)',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -67,9 +67,11 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 155, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
@@ -86,7 +88,7 @@ kruskal.test(trophic_level ~ iucn_category, data = for_figures)
 
 pairwise.wilcox.test(for_figures$trophic_level, for_figures$iucn_category, p.adjust.method = 'BH')
 
-ggplot(
+trophic_level_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -103,7 +105,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Trophic Level',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -113,9 +115,11 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 5.5, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
@@ -138,7 +142,7 @@ longevity_anova <- aov(
 
 TukeyHSD(longevity_anova)
 
-ggplot(
+longevity_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -160,7 +164,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Log-Transformed Mean Longevity in Years',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -170,9 +174,11 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 5.2, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
@@ -190,7 +196,7 @@ length_anova <- aov(
 
 TukeyHSD(length_anova)
 
-ggplot(
+length_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -210,7 +216,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Log-Transformed Maximum Body Length in Meters',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -220,15 +226,17 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 12, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
 # depth zone
 
-for_figures %>% 
+depth_zone_barplot <- for_figures %>% 
   filter(!is.na(depth_zone)) %>% 
   group_by(iucn_text,depth_zone) %>% 
   summarize(in_group = n()) %>% 
@@ -245,6 +253,7 @@ ggplot() +
     y = percent,
     fill = depth_zone)) +
   labs(
+    title = '',
     y = 'Percent',
     fill = 'Depth Zone',
     x = 'IUCN Category') +
@@ -274,7 +283,7 @@ kruskal.test(mature_age ~ iucn_category, data = for_figures)
 
 pairwise.wilcox.test(for_figures$mature_age, for_figures$iucn_category, p.adjust.method = 'BH')
 
-ggplot(
+mature_age_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -294,7 +303,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Mature Age (years)',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -304,9 +313,11 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 35, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
@@ -323,7 +334,7 @@ kruskal.test(long_range ~ iucn_category, data = for_figures)
 
 pairwise.wilcox.test(for_figures$long_range, for_figures$iucn_category, p.adjust.method = 'BH')
 
-ggplot(
+long_range_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -342,7 +353,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Longitudinal Range (degrees)',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -352,9 +363,11 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 380, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
@@ -372,7 +385,7 @@ mass_anova <- aov(
 
 TukeyHSD(mass_anova)
 
-ggplot(
+mass_boxplot <- ggplot(
   data = for_figures %>% 
     filter(mass_g < 10000000) %>% 
     mutate(
@@ -392,7 +405,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Log-Transformed Maximum Body Mass (g)',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -402,15 +415,17 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 15.5, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
 
 # diet
 
-for_figures %>% 
+diet_barplot <- for_figures %>% 
   filter(!is.na(diet)) %>% 
   group_by(iucn_text,diet) %>% 
   summarize(in_group = n()) %>% 
@@ -459,7 +474,7 @@ for_figures %>%
   group_by(iucn_text) %>% 
   summarize(mean_depth = mean(depth_num, na.rm = T))
 
-ggplot(
+depth_num_boxplot <- ggplot(
   data = for_figures %>% 
     mutate(
       sig = case_when(
@@ -479,7 +494,7 @@ ggplot(
     shape = 1,
     size = 3) +
   labs(
-    y = 'Depth in Meters',
+    y = NULL,
     color = 'IUCN Category',
     x = NULL) +
   theme_bw() +
@@ -489,8 +504,35 @@ ggplot(
     axis.text.x = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
-    panel.background = element_rect(fill = 'gray85')) +
+    panel.background = element_rect(fill = 'gray85'),
+    axis.title.y = element_text(size = 6)) +
   geom_text(
     aes(y = 8000, label = sig, color = NULL),
+    size = 2,
     show.legend = F) +
   scale_colour_viridis_d()
+
+ggarrange(
+  plotlist = list(depth_zone_barplot, diet_barplot),
+  ncol = 2,
+  labels = c('a)','b)'))
+
+ggarrange(
+  plotlist = list(
+    depth_num_boxplot,
+    lat_range_boxplot,
+    length_boxplot,
+    long_range_boxplot,
+    longevity_boxplot,
+    mass_boxplot,
+    mature_age_boxplot,
+    trophic_level_boxplot),
+  ncol = 3,
+  nrow = 3,
+  labels = c('a)','b)','c)','d)','e)','f)','g)','h)'),
+  label.x = -0.03,
+  label.y = 1.05,
+  font.label = c(size = 10),
+  legend = 'right',
+  common.legend = T,
+  legend.grob = get_legend(depth_num_boxplot))
