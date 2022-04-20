@@ -1,0 +1,116 @@
+title: "tax-figs"
+output: html_document
+date: '2022-04-06'
+---
+​
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries:
+```{r}
+library(tidyverse)
+library(dplyr)
+library(metacoder)
+library(ggfittext)
+```
+​
+Set wd:
+```{r}
+setwd("~/Documents/UNC 2021-22/Spring/BIOL669")
+```
+​
+Load data:
+```{r}
+tax <- read.csv("wd_fulltax_itis.csv")
+```
+​
+Class:
+​
+Remove NAs:
+```{r}
+class_nn <- as_tibble(na.omit(tax$class)) %>%
+  rename(class = value)
+
+class_count <- class_nn %>%
+  count(class) %>% 
+  group_by(n)
+```
+​
+```{r}
+ggplot(class_count, aes(x = class, y = n, fill = class)) +
+  geom_col() +
+  theme(legend.position = "none")
+  
+```
+Order:
+Remove NAs
+```{r}
+order_nn <- tax %>%
+  select(order, class) %>%
+  na.omit(order)
+order_count <- order_nn %>%
+  count(order) %>% 
+  group_by(n)
+​
+```
+​
+```{r}
+ggplot(order_nn, aes(x = order, fill = class)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1)) +
+  scale_fill_viridis_d() +
+  theme(text = element_text(size = 8)) +
+  xlab("Order") +
+  ylab("Number of species") +
+  labs(fill = "Class") +
+  theme(panel.background = element_blank()) +
+  theme(legend.key.width= unit(.3, 'cm'),
+        legend.key.height = unit(.3, 'cm'))
+​
+```
+​
+​
+​
+```{r}
+ggplot(order_nn, aes(x = order, fill = order)) +
+  geom_bar(width = 1) +
+  theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1)) +
+  theme(text = element_text(size = 8)) +
+  xlab("Order") +
+  ylab("Number of species")
+```
+​
+​
+​
+​
+​
+​
+​
+```{r}
+​
+```
+​
+​
+```{r}
+unique_genus <- unique(tax$genus)
+length(unique_genus)
+```
+​
+```{r}
+unique_order <- unique(tax$order)
+length(unique_order)
+```
+​
+```{r}
+install.packages("metacoder")
+```
+​
+```{r}
+obj <- parse_tax_data(tax, class_cols = (c("query", "genus", "family", "order", "class")))
+```
+​
+```{r}
+obj$data$tax_abund <- calc_taxon_abund(obj, "tax_data")
+```
